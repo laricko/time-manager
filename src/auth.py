@@ -45,4 +45,5 @@ def _get_user(username: str, password: str):
     query = select(User).where(User.username == username, User.password == password)
     cur = db_session.execute(query)
     if row := cur.first():
-        return row._asdict().get("User") or anonymous_user
+        return row._asdict().get("User")
+    return anonymous_user

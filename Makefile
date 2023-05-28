@@ -9,3 +9,6 @@ drop_db:
 
 psql:
 	docker exec -it time_db psql -U postgres
+
+test:
+	pytest -s src

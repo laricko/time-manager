@@ -1,11 +1,13 @@
 import os
-
 import click
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-db_url = os.environ.get("DATABASE_URI")
-engine = create_engine(db_url)
+from config import DATABASE_URI
+
+db_url = os.environ.get("DATABASE_URI", f"{DATABASE_URI}_test")
+engine = create_engine(db_url, pool_pre_ping=True)
 session_factory = sessionmaker(engine)
 db_session = scoped_session(session_factory)
 
