@@ -5,7 +5,7 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object("config.DevelopmentConfig")
 
-    from db import init_db, db_session
+    from db import db_session, init_db
 
     app.cli.add_command(init_db)
 

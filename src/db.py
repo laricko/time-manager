@@ -1,9 +1,8 @@
-import click
 import os
 
+import click
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
-
 
 db_url = os.environ.get("DATABASE_URI")
 engine = create_engine(db_url)

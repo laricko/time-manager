@@ -1,8 +1,7 @@
-from typing import Optional
 from datetime import datetime
 
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import String, func
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
