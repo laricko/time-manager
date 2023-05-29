@@ -1,5 +1,6 @@
+from base64 import b64encode
+
 import pytest
-from sqlalchemy import select
 
 from app import create_app
 from db import init_db, db_session as session
@@ -32,4 +33,10 @@ def test_user(db_session) -> User:
     db_session.add(u)
     db_session.commit()
     return db_session.get(User, 1)
+
+@pytest.fixture
+def test_user_creds(test_user) -> dict:
+    to_encode = f"{test_user.username}:{test_user.password}"
+    encoded = b64encode(to_encode.encode()).decode()
+    return {"Authorization": f"Basic {encoded}"}
 
