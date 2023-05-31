@@ -4,7 +4,7 @@ import pytest
 from flask import Flask
 
 from app import create_app
-from db import init_db, connector
+from db import connector, init_db
 from models import User
 
 

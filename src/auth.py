@@ -1,12 +1,12 @@
 from base64 import b64decode
 
-from flask import request, current_app
+from flask import request
 from sqlalchemy import select
 from werkzeug.exceptions import Forbidden
 from werkzeug.wrappers import Request
 
-from models import User
 from db import connector
+from models import User
 
 
 def only_authenticated(view: callable):
