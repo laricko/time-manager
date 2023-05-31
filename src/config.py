@@ -1,6 +1,5 @@
 import os
 
-
 _POSTGRES_DB = "postgres"
 _POSTGRES_USER = "postgres"
 _POSTGRES_PASSWORD = "postgres"

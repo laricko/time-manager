@@ -1,12 +1,12 @@
 from base64 import b64decode
 
-from flask import request
+from flask import request, current_app
 from sqlalchemy import select
 from werkzeug.exceptions import Forbidden
 from werkzeug.wrappers import Request
 
-from db import db_session
 from models import User
+from db import connector
 
 
 def only_authenticated(view: callable):
@@ -43,7 +43,7 @@ def get_user(request: Request):
 
 def _get_user(username: str, password: str):
     query = select(User).where(User.username == username, User.password == password)
-    cur = db_session.execute(query)
+    cur = connector.session.execute(query)
     if row := cur.first():
         return row._asdict().get("User")
     return anonymous_user

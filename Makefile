@@ -12,3 +12,6 @@ psql:
 
 test:
 	pytest -s src
+
+create_test_database:
+	docker exec -t time_db psql -U postgres -c "create database postgres_test"

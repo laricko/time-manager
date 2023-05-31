@@ -5,13 +5,10 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.config.from_object("config.DevelopmentConfig")
 
-    from db import db_session, init_db
+    from db import init_db, connector
 
     app.cli.add_command(init_db)
-
-    @app.teardown_request
-    def close_db(e=None):
-        db_session.remove()
+    connector.init_app(app)
 
     from routes import base_router
 
