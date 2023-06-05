@@ -10,11 +10,11 @@ from models import User
 
 
 def only_authenticated(view: callable):
-    def check_user():
+    def check_user(*args, **kwargs):
         user = request.environ["user"]
         if not user.is_authenticated:
             raise Forbidden
-        return view()
+        return view(*args, **kwargs)
 
     return check_user
 

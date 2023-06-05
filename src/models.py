@@ -34,11 +34,8 @@ class Task(Base):
     __tablename__ = "task"
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"))
     title: Mapped[str] = mapped_column(String(63))
-    description: Mapped[str | None] = mapped_column(Text, nullable=True)
-    finish: Mapped[datetime | None]
-    approximately_finish: Mapped[datetime | None]
-    __table_args__ = (
-        CheckConstraint(
-            text("finish != null or approximately_finish != null"), "check_one_must_be"
-        ),
-    )
+    description: Mapped[str | None] = mapped_column(Text)
+    finish: Mapped[datetime]
+
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
