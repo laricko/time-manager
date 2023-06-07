@@ -27,6 +27,7 @@ def create_task():
         user_id=user.id,
         title=data["title"],
         description=data["description"],
+        start=data["start"],
         finish=data["finish"],
     )
     connector.session.add(task)

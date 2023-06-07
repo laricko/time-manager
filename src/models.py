@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from sqlalchemy import CheckConstraint, ForeignKey, String, Text, func, text
+from sqlalchemy import ForeignKey, String, Text, func, CheckConstraint, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.ext.hybrid import hybrid_property
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
@@ -35,7 +36,19 @@ class Task(Base):
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id", ondelete="CASCADE"))
     title: Mapped[str] = mapped_column(String(63))
     description: Mapped[str | None] = mapped_column(Text)
+    start: Mapped[datetime]
     finish: Mapped[datetime]
 
     def as_dict(self):
-        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        r = self.__dict__
+        r.pop("_sa_instance_state")
+        r["duration"] = str(self.duration)
+        return r
+
+    @hybrid_property
+    def duration(self):
+        return self.finish - self.created_at
+
+    __table_args__ = (
+        CheckConstraint(text("start < finish"), "check_finish_bigger_than_start"),
+    )

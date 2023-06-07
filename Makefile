@@ -1,3 +1,6 @@
+create_test_db_query = 'create database postgres_test'
+
+
 run_dev:
 	flask --app src/app.py run --debug --host=0.0.0.0 --port=8000
 
@@ -14,4 +17,4 @@ test:
 	pytest -s src
 
 create_test_database:
-	docker exec -t time_db psql -U postgres -c "create database postgres_test"
+	docker exec -t time_db psql -U postgres -c $(create_test_db_query)
