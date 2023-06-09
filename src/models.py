@@ -47,7 +47,7 @@ class Task(Base):
 
     @hybrid_property
     def duration(self):
-        return self.finish - self.created_at
+        return self.finish - self.start
 
     __table_args__ = (
         CheckConstraint(text("start < finish"), "check_finish_bigger_than_start"),

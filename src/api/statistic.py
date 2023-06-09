@@ -18,7 +18,7 @@ ONE_DAY_SECODS_AMOUNT = 86400 - SLEEP_TIME
 def collect_statistic(tasks: list[Task]) -> dict:
     result = {}
     # Implement logic
-    return result
+    return tasks
     # sum_duration = timedelta()
     # how_much_today = 0
     # today = datetime.now().date()
