@@ -1,3 +1,5 @@
+from datetime import timedelta, datetime
+
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 
@@ -9,30 +11,28 @@ statistic_router = Blueprint("statistic", __name__, url_prefix="statistic")
 
 
 SLEEP_TIME = 28800  # Must be in user settings
-ONE_DAY_SECODS_AMOUNT = 86400 - SLEEP_TIME
 
 
-def collect_statistic(tasks: list[Task]) -> dict:
-    # Implement logic
-    return [task.as_dict() for task in tasks]
-    # result = {}
-    # sum_duration = timedelta()
-    # how_much_today = 0
-    # today = datetime.now().date()
+def collect_statistic(tasks: list[Task], start: datetime, finish: datetime) -> dict:
+    result = {}
 
-    # for task in tasks:
-    #     sum_duration += task.duration
-    #     if task.created_at.date() == today:
-    #         how_much_today += 1
+    result["task_qty"] = len(tasks)
 
-    # result["sum_duration"] = str(sum_duration)
-    # result["all_tasks"] = len(tasks)
-    # result["how_much_today"] = how_much_today
-    # result["free_time_percentale"] = int(
-    #     sum_duration.seconds * 100 / ONE_DAY_SECODS_AMOUNT
-    # )
-    # result["free_time_value_in_seconds"] = ONE_DAY_SECODS_AMOUNT - sum_duration.seconds
-    # return result
+    sum_task_duration = timedelta()
+    for task in tasks:
+        sum_task_duration += task.duration
+    result["sum_task_duration"] = str(sum_task_duration)
+
+    period: timedelta = finish - start
+    result["period"] = str(period)
+    sleep_time_in_period = period.days * SLEEP_TIME
+    work_time_in_period = period.total_seconds() - sleep_time_in_period
+    result["free_time_percentale"] = int(
+        sum_task_duration.total_seconds() * 100 / work_time_in_period
+    )
+    result["sleep_time"] = str(timedelta(seconds=sleep_time_in_period))
+
+    return result
 
 
 @statistic_router.get("/", endpoint="get_statistic")
@@ -44,6 +44,8 @@ def statistic():
         }, BadRequest.code
     start = request.args["start"]
     finish = request.args["finish"]
+    start = datetime.fromisoformat(start)
+    finish = datetime.fromisoformat(finish)
     user = request.environ["user"]
     tasks = crud_task.get_tasks(user, start=start, finish=finish)
-    return collect_statistic(tasks)
+    return collect_statistic(tasks, start, finish)
