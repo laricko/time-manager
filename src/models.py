@@ -1,8 +1,8 @@
 from datetime import datetime
 
-from sqlalchemy import ForeignKey, String, Text, func, CheckConstraint, text
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import CheckConstraint, ForeignKey, String, Text, func, text
 from sqlalchemy.ext.hybrid import hybrid_property
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from werkzeug.security import check_password_hash, generate_password_hash
 
 

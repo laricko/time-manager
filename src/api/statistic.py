@@ -1,12 +1,9 @@
-from datetime import timedelta, datetime
-
 from flask import Blueprint, request
-from sqlalchemy import select
+from werkzeug.exceptions import BadRequest
 
+import crud_task
 from auth import only_authenticated
-from db import connector
 from models import Task
-
 
 statistic_router = Blueprint("statistic", __name__, url_prefix="statistic")
 
@@ -16,9 +13,9 @@ ONE_DAY_SECODS_AMOUNT = 86400 - SLEEP_TIME
 
 
 def collect_statistic(tasks: list[Task]) -> dict:
-    result = {}
     # Implement logic
-    return tasks
+    return [task.as_dict() for task in tasks]
+    # result = {}
     # sum_duration = timedelta()
     # how_much_today = 0
     # today = datetime.now().date()
@@ -41,7 +38,12 @@ def collect_statistic(tasks: list[Task]) -> dict:
 @statistic_router.get("/", endpoint="get_statistic")
 @only_authenticated
 def statistic():
+    if "start" not in request.args or "finish" not in request.args:
+        return {
+            "detail": "start and finish datetimes must be in params"
+        }, BadRequest.code
+    start = request.args["start"]
+    finish = request.args["finish"]
     user = request.environ["user"]
-    query = select(Task).where(Task.user_id == user.id)
-    tasks = connector.session.scalars(query).all()
+    tasks = crud_task.get_tasks(user, start=start, finish=finish)
     return collect_statistic(tasks)
