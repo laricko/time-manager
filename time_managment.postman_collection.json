@@ -1,0 +1,207 @@
+{
+	"info": {
+		"_postman_id": "08097c61-1d3c-4b17-8272-0ef9778e5e27",
+		"name": "time_managment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get all tasks",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/task/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"task",
+						""
+					],
+					"query": [
+						{
+							"key": "type",
+							"value": "current",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create new task",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let startDate = new Date()",
+							"let finishDate = new Date()",
+							"",
+							"let currentHour = startDate.getHours()",
+							"let currentDay = startDate.getDate()",
+							"let randomVector = Math.round(Math.random() * 10)",
+							"let randomVector2 = Math.round(Math.random() * 10)",
+							"",
+							"let startDateHourValue = currentHour + randomVector",
+							"let finishDateHourValue = startDateHourValue + randomVector2",
+							"",
+							"if (startDateHourValue > 24) startDate.setDate(currentDay + 1)",
+							"if (finishDateHourValue > 24) finishDate.setDate(currentDay + 1)",
+							"",
+							"startDate.setHours(startDateHourValue)",
+							"finishDate.setHours(startDateHourValue + randomVector2)",
+							"",
+							"pm.environment.set(\"startDate\", startDate.toISOString());",
+							"pm.environment.set(\"finishDate\", finishDate.toISOString());",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "{{$randomLoremWord}}",
+							"type": "default"
+						},
+						{
+							"key": "description",
+							"value": "{{$randomLoremText}}",
+							"type": "default"
+						},
+						{
+							"key": "start",
+							"value": "{{startDate}}",
+							"type": "default"
+						},
+						{
+							"key": "finish",
+							"value": "{{finishDate}}",
+							"type": "default"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/task",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"task"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get statistic",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let start, finish;",
+							"",
+							"start = new Date()",
+							"finish = new Date()",
+							"currentDay = start.getDate()",
+							"randomVector = Math.random() * 10",
+							"",
+							"start.setDate(currentDay - randomVector)",
+							"",
+							"pm.environment.set(\"start\", start.toISOString());",
+							"pm.environment.set(\"finish\", finish.toISOString());",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/statistic/?start={{start}}&finish={{finish}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"statistic",
+						""
+					],
+					"query": [
+						{
+							"key": "start",
+							"value": "{{start}}"
+						},
+						{
+							"key": "finish",
+							"value": "{{finish}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "{{test_password}}",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "{{test_username}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "test_username",
+			"value": "lari",
+			"type": "default"
+		},
+		{
+			"key": "test_password",
+			"value": "string",
+			"type": "default"
+		}
+	]
+}
