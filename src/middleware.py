@@ -21,9 +21,12 @@ class CorsMiddleware:
     def __call__(self, environ, start_response):
         def new_start_response(status: str, headers: list[tuple]):
             # NOTE: In a future this should be handeled properly
-            headers.append(("Access-Control-Allow-Origin", "*"))
+            headers.append(("Access-Control-Allow-Origin", "http://localhost:3000"))
             headers.append(("Access-Control-Allow-Headers", "*"))
-            headers.append(("Access-Control-Allow-Methods", "*"))
+            headers.append(("Access-Control-Allow-Methods", "POST,GET,OPTIONS"))
+            headers.append(("Access-Control-Max-Age", "86400"))
+            headers.append(("Access-Control-Allow-Credentials", "true"))
+
             return start_response(status, headers)
 
         return self.app(environ, new_start_response)
