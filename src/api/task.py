@@ -1,5 +1,3 @@
-from datetime import datetime
-
 from flask import Blueprint, request
 
 import crud_task as crud
@@ -24,3 +22,17 @@ def create_task():
     data = request.form
     crud.create_task(user, data)
     return data
+
+
+@task_router.delete("/<id>", endpoint="delete_task")
+@only_authenticated
+def delete_task(id):
+    crud.delete_task(id)
+    return {"detail": "success"}
+
+
+@task_router.patch("/<id>", endpoint="patch_task")
+@only_authenticated
+def patch_task(id):
+    task = crud.patch_task(id, request.form)
+    return task.as_dict()

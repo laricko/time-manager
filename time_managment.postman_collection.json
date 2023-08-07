@@ -1,8 +1,9 @@
 {
 	"info": {
-		"_postman_id": "08097c61-1d3c-4b17-8272-0ef9778e5e27",
+		"_postman_id": "9ee019c5-041d-4fb4-8aa7-f29faedba54c",
 		"name": "time_managment",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28427109"
 	},
 	"item": [
 		{
@@ -155,6 +156,54 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Delete task",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/task/{{randomTaskId}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"task",
+						"{{randomTaskId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Patch task",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "title",
+							"value": "{{$randomLoremWord}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{base_url}}/api/task/{{randomTaskId}}",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"task",
+						"{{randomTaskId}}"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {
@@ -178,6 +227,20 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
+					"pm.sendRequest(",
+					"    {",
+					"        url: \"http://localhost:8000/api/task/\", ",
+					"        method: \"GET\",",
+					"        header: {",
+					"            Authorization: \"Basic bGFyaTpzdHJpbmc=\",",
+					"            \"Content-Type\": \"application/x-www-form-urlencoded; charset=UTF-8\"",
+					"        }",
+					"    }, (err, res) => {",
+					"        let tasks = res.json()",
+					"        let index = Math.floor(Math.random() * tasks.length);",
+					"        pm.environment.set(\"randomTaskId\", tasks[index].id);",
+					"    }",
+					")",
 					""
 				]
 			}

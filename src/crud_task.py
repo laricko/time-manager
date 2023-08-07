@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Literal
 
-from sqlalchemy import Select, and_, select
+from sqlalchemy import Select, and_, select, delete, update, literal_column
 
 from db import connector
 from models import Task, User
@@ -30,6 +30,19 @@ def create_task(user: User, data: dict) -> None:
     )
     connector.session.add(task)
     connector.session.commit()
+
+
+def delete_task(id: int) -> None:
+    query = delete(Task).where(Task.id == id)
+    connector.session.execute(query)
+    connector.session.commit()
+
+
+def patch_task(id: int, data: dict) -> Task:
+    query = update(Task).values(data).where(Task.id == id).returning(Task)
+    cur = connector.session.execute(query)
+    connector.session.commit()
+    return cur.scalar_one()
 
 
 _base_query = lambda user_id: select(Task).where(Task.user_id == user_id)
