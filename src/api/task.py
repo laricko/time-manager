@@ -36,3 +36,9 @@ def delete_task(id):
 def patch_task(id):
     task = crud.patch_task(id, request.form)
     return task.as_dict()
+
+@task_router.get("/<id>", endpoint="task_detail")
+@only_authenticated
+def task_detail(id):
+    task = crud.get_task_by_id(id)
+    return task.as_dict()

@@ -45,6 +45,10 @@ def patch_task(id: int, data: dict) -> Task:
     return cur.scalar_one()
 
 
+def get_task_by_id(id: int) -> Task:
+    return connector.session.get(Task, id)
+
+
 _base_query = lambda user_id: select(Task).where(Task.user_id == user_id)
 
 
