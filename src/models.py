@@ -43,6 +43,9 @@ class Task(Base):
         r = self.__dict__
         r.pop("_sa_instance_state")
         r["duration"] = str(self.duration)
+        r["start"] = str(self.start)[:-3]
+        r["finish"] = str(self.finish)[:-3]
+        r["created_at"] = str(self.created_at)
         return r
 
     @hybrid_property

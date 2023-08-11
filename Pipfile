@@ -7,6 +7,7 @@ name = "pypi"
 flask = "*"
 psycopg2-binary = "*"
 sqlalchemy = "*"
+flask-cors = "*"
 
 [dev-packages]
 black = "*"
