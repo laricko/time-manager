@@ -23,7 +23,7 @@ class CorsMiddleware:
             # NOTE: In a future this should be handeled properly
             headers.append(("Access-Control-Allow-Origin", "http://localhost:3000"))
             headers.append(("Access-Control-Allow-Headers", "*"))
-            headers.append(("Access-Control-Allow-Methods", "POST,GET,OPTIONS"))
+            headers.append(("Access-Control-Allow-Methods", "POST,GET,OPTIONS,DELETE,PATCH"))
             headers.append(("Access-Control-Max-Age", "86400"))
             headers.append(("Access-Control-Allow-Credentials", "true"))
 
