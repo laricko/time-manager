@@ -1,6 +1,6 @@
 from flask import Blueprint, request
 
-import crud_task as crud
+from crud import task as crud
 from auth import only_authenticated
 
 task_router = Blueprint("task", __name__, url_prefix="/task")

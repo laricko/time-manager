@@ -8,6 +8,7 @@ flask = "*"
 psycopg2-binary = "*"
 sqlalchemy = "*"
 flask-cors = "*"
+python-jose = {version = "*", extras = ["cryptography"]}
 
 [dev-packages]
 black = "*"

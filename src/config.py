@@ -1,16 +1,25 @@
 import os
 
-_POSTGRES_DB = "postgres"
-_POSTGRES_USER = "postgres"
-_POSTGRES_PASSWORD = "postgres"
-DATABASE_URI = (
-    f"postgresql://{_POSTGRES_USER}:{_POSTGRES_PASSWORD}@db:5432/{_POSTGRES_DB}"
-)
-
 
 class Config:
     TESTING = False
-    SECRET_KEY = "super_secret"
+    SECRET_KEY = "ixnXVzGMt7OKGnYUSHBB3sY4viSuhkZ8"
+    ALGORITHM = "HS256"
+
+    os.environ["SECRET_KEY"] = SECRET_KEY
+    os.environ["ALGORITHM"] = ALGORITHM
+
+    JWT_EXPIRE_MINUTES = "60"
+
+    _POSTGRES_DB = "postgres"
+    _POSTGRES_USER = "postgres"
+    _POSTGRES_PASSWORD = "postgres"
+    _POSTGRES_HOST = "db"
+
+    @property
+    def DATABASE_URI(self):
+        uri = f"postgresql://{self._POSTGRES_USER}:{self._POSTGRES_PASSWORD}@{self._POSTGRES_HOST}:5432/{self._POSTGRES_DB}"
+        return uri
 
 
 class ProductionConfig(Config):
@@ -19,12 +28,10 @@ class ProductionConfig(Config):
 
 class DevelopmentConfig(Config):
     DEVELOPMENT = True
-    DATABASE_URI = DATABASE_URI
-    os.environ["DATABASE_URI"] = DATABASE_URI
 
 
 class TestingConfig(Config):
     TESTING = True
-    DATABASE_URI = f"{DATABASE_URI}_test"
-    os.environ["DATABASE_URI"] = DATABASE_URI
     DEVELOPMENT = False
+    _POSTGRES_HOST = "0.0.0.0"
+    _POSTGRES_DB = "postgres_test"

@@ -7,216 +7,369 @@
 	},
 	"item": [
 		{
-			"name": "Get all tasks",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{base_url}}/api/task/",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"api",
-						"task",
-						""
-					],
-					"query": [
-						{
-							"key": "type",
-							"value": "current",
-							"disabled": true
+			"name": "task",
+			"item": [
+				{
+					"name": "Get all tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/task/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"task",
+								""
+							],
+							"query": [
+								{
+									"key": "type",
+									"value": "current",
+									"disabled": true
+								}
+							]
 						}
-					]
+					},
+					"response": []
+				},
+				{
+					"name": "Create new task",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let startDate = new Date()",
+									"let finishDate = new Date()",
+									"",
+									"let currentHour = startDate.getHours()",
+									"let currentDay = startDate.getDate()",
+									"let randomVector = Math.round(Math.random() * 10)",
+									"let randomVector2 = Math.round(Math.random() * 10)",
+									"",
+									"let startDateHourValue = currentHour + randomVector",
+									"let finishDateHourValue = startDateHourValue + randomVector2",
+									"",
+									"if (startDateHourValue > 24) startDate.setDate(currentDay + 1)",
+									"if (finishDateHourValue > 24) finishDate.setDate(currentDay + 1)",
+									"",
+									"startDate.setHours(startDateHourValue)",
+									"finishDate.setHours(startDateHourValue + randomVector2)",
+									"",
+									"pm.environment.set(\"startDate\", startDate.toISOString());",
+									"pm.environment.set(\"finishDate\", finishDate.toISOString());",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "{{$randomLoremWord}}",
+									"type": "default"
+								},
+								{
+									"key": "description",
+									"value": "{{$randomLoremText}}",
+									"type": "default"
+								},
+								{
+									"key": "start",
+									"value": "{{startDate}}",
+									"type": "default"
+								},
+								{
+									"key": "finish",
+									"value": "{{finishDate}}",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/task",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"task"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get statistic",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let start, finish;",
+									"",
+									"start = new Date()",
+									"finish = new Date()",
+									"currentDay = start.getDate()",
+									"randomVector = Math.random() * 10",
+									"",
+									"start.setDate(currentDay - randomVector)",
+									"",
+									"pm.environment.set(\"start\", start.toISOString());",
+									"pm.environment.set(\"finish\", finish.toISOString());",
+									"",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/statistic/?start={{start}}&finish={{finish}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"statistic",
+								""
+							],
+							"query": [
+								{
+									"key": "start",
+									"value": "{{start}}"
+								},
+								{
+									"key": "finish",
+									"value": "{{finish}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete task",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/task/{{randomTaskId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"task",
+								"{{randomTaskId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Patch task",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "title",
+									"value": "{{$randomLoremWord}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/task/{{randomTaskId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"task",
+								"{{randomTaskId}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get task by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/task/{{randomTaskId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"task",
+								"{{randomTaskId}}"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
-		},
-		{
-			"name": "Create new task",
+			],
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
+						"type": "text/javascript",
 						"exec": [
-							"let startDate = new Date()",
-							"let finishDate = new Date()",
-							"",
-							"let currentHour = startDate.getHours()",
-							"let currentDay = startDate.getDate()",
-							"let randomVector = Math.round(Math.random() * 10)",
-							"let randomVector2 = Math.round(Math.random() * 10)",
-							"",
-							"let startDateHourValue = currentHour + randomVector",
-							"let finishDateHourValue = startDateHourValue + randomVector2",
-							"",
-							"if (startDateHourValue > 24) startDate.setDate(currentDay + 1)",
-							"if (finishDateHourValue > 24) finishDate.setDate(currentDay + 1)",
-							"",
-							"startDate.setHours(startDateHourValue)",
-							"finishDate.setHours(startDateHourValue + randomVector2)",
-							"",
-							"pm.environment.set(\"startDate\", startDate.toISOString());",
-							"pm.environment.set(\"finishDate\", finishDate.toISOString());",
 							""
-						],
-						"type": "text/javascript"
+						]
 					}
-				}
-			],
-			"request": {
-				"method": "POST",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "title",
-							"value": "{{$randomLoremWord}}",
-							"type": "default"
-						},
-						{
-							"key": "description",
-							"value": "{{$randomLoremText}}",
-							"type": "default"
-						},
-						{
-							"key": "start",
-							"value": "{{startDate}}",
-							"type": "default"
-						},
-						{
-							"key": "finish",
-							"value": "{{finishDate}}",
-							"type": "default"
-						}
-					]
 				},
-				"url": {
-					"raw": "{{base_url}}/api/task",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"api",
-						"task"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Get statistic",
-			"event": [
 				{
-					"listen": "prerequest",
+					"listen": "test",
 					"script": {
+						"type": "text/javascript",
 						"exec": [
-							"let start, finish;",
-							"",
-							"start = new Date()",
-							"finish = new Date()",
-							"currentDay = start.getDate()",
-							"randomVector = Math.random() * 10",
-							"",
-							"start.setDate(currentDay - randomVector)",
-							"",
-							"pm.environment.set(\"start\", start.toISOString());",
-							"pm.environment.set(\"finish\", finish.toISOString());",
-							"",
 							""
-						],
-						"type": "text/javascript"
+						]
 					}
 				}
-			],
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{base_url}}/api/statistic/?start={{start}}&finish={{finish}}",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"api",
-						"statistic",
-						""
-					],
-					"query": [
-						{
-							"key": "start",
-							"value": "{{start}}"
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"auth": {
+							"type": "noauth"
 						},
-						{
-							"key": "finish",
-							"value": "{{finish}}"
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "{{$randomFirstName}}",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "{{$randomPassword}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
 						}
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Delete task",
-			"request": {
-				"method": "DELETE",
-				"header": [],
-				"url": {
-					"raw": "{{base_url}}/api/task/{{randomTaskId}}",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"api",
-						"task",
-						"{{randomTaskId}}"
-					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Patch task",
-			"request": {
-				"method": "PATCH",
-				"header": [],
-				"body": {
-					"mode": "formdata",
-					"formdata": [
-						{
-							"key": "title",
-							"value": "{{$randomLoremWord}}",
-							"type": "text"
-						}
-					]
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{base_url}}/api/task/{{randomTaskId}}",
-					"host": [
-						"{{base_url}}"
-					],
-					"path": [
-						"api",
-						"task",
-						"{{randomTaskId}}"
-					]
+				{
+					"name": "Login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "lari",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "string",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/auth/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	],
 	"auth": {
-		"type": "basic",
-		"basic": [
+		"type": "jwt",
+		"jwt": [
 			{
-				"key": "password",
-				"value": "{{test_password}}",
+				"key": "payload",
+				"value": "{\r\n    \"sub\": \"lari\",\r\n    \"exp\": {{exp}}\r\n}",
 				"type": "string"
 			},
 			{
-				"key": "username",
-				"value": "{{test_username}}",
+				"key": "secret",
+				"value": "ixnXVzGMt7OKGnYUSHBB3sY4viSuhkZ8",
+				"type": "string"
+			},
+			{
+				"key": "algorithm",
+				"value": "HS256",
+				"type": "string"
+			},
+			{
+				"key": "isSecretBase64Encoded",
+				"value": false,
+				"type": "boolean"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			},
+			{
+				"key": "headerPrefix",
+				"value": "Bearer",
+				"type": "string"
+			},
+			{
+				"key": "queryParamKey",
+				"value": "token",
+				"type": "string"
+			},
+			{
+				"key": "header",
+				"value": "{}",
 				"type": "string"
 			}
 		]
@@ -227,21 +380,10 @@
 			"script": {
 				"type": "text/javascript",
 				"exec": [
-					"pm.sendRequest(",
-					"    {",
-					"        url: \"http://localhost:8000/api/task/\", ",
-					"        method: \"GET\",",
-					"        header: {",
-					"            Authorization: \"Basic bGFyaTpzdHJpbmc=\",",
-					"            \"Content-Type\": \"application/x-www-form-urlencoded; charset=UTF-8\"",
-					"        }",
-					"    }, (err, res) => {",
-					"        let tasks = res.json()",
-					"        let index = Math.floor(Math.random() * tasks.length);",
-					"        pm.environment.set(\"randomTaskId\", tasks[index].id);",
-					"    }",
-					")",
-					""
+					"let now = new Date()",
+					"let exp = new Date(now.getTime() + 60*60000)",
+					"",
+					"pm.environment.set(\"exp\", exp.getTime());"
 				]
 			}
 		},

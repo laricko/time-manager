@@ -3,7 +3,7 @@ from datetime import timedelta, datetime
 from flask import Blueprint, request
 from werkzeug.exceptions import BadRequest
 
-import crud_task
+from crud import task as crud
 from auth import only_authenticated
 from models import Task
 
@@ -47,5 +47,5 @@ def statistic():
     start = datetime.fromisoformat(start)
     finish = datetime.fromisoformat(finish)
     user = request.environ["user"]
-    tasks = crud_task.get_tasks(user, start=start, finish=finish)
+    tasks = crud.get_tasks(user, start=start, finish=finish)
     return collect_statistic(tasks, start, finish)

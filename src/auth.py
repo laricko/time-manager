@@ -1,11 +1,10 @@
-from base64 import b64decode
-
 from flask import request
 from sqlalchemy import select
 from werkzeug.exceptions import Forbidden
 from werkzeug.wrappers import Request
 
 from db import connector
+from security import decode_access_token
 from models import User
 
 
@@ -35,15 +34,12 @@ def get_user(request: Request):
     creds = request.authorization
     if not creds:
         return anonymous_user
-    _, token = request.authorization.to_header().split(" ")
-    decoded = b64decode(token).decode()
-    username, password = decoded.split(":")
-    return _get_user(username, password)
+    _, token = creds.to_header().split(" ")
+    decoded = decode_access_token(token)
+    return _get_user(decoded["sub"])
 
 
-def _get_user(username: str, password: str):
-    query = select(User).where(User.username == username, User.password == password)
-    cur = connector.session.execute(query)
-    if row := cur.first():
-        return row._asdict().get("User")
-    return anonymous_user
+def _get_user(username: str) -> User:
+    query = select(User).where(User.username == username)
+    user = connector.session.scalars(query).first()
+    return user or anonymous_user

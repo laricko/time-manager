@@ -1,11 +1,14 @@
 from flask import Flask
 from flask_cors import CORS
+from werkzeug.utils import import_string
 
 
 def create_app() -> Flask:
     app = Flask(__name__)
     CORS(app)
-    app.config.from_object("config.DevelopmentConfig")
+
+    cfg = import_string("config.DevelopmentConfig")()
+    app.config.from_object(cfg)
 
     from db import connector, init_db
 

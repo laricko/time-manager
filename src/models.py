@@ -5,16 +5,23 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from werkzeug.security import check_password_hash, generate_password_hash
 
+from security import check_user_admin
+
 
 class Base(DeclarativeBase):
     id: Mapped[int] = mapped_column(primary_key=True)
     created_at: Mapped[datetime] = mapped_column(server_default=func.now())
 
+    def as_dict(self) -> dict:
+        result = self.__dict__
+        result.pop("_sa_instance_state")
+        return result
+
 
 class User(Base):
     __tablename__ = "user"
     username: Mapped[str] = mapped_column(String(31), unique=True)
-    password: Mapped[str] = mapped_column(String(31))
+    password: Mapped[str] = mapped_column(String(127))
 
     def __repr__(self) -> str:
         return f"User id-{self.id} {self.username}"
@@ -22,13 +29,18 @@ class User(Base):
     is_anonymous = False
     is_authenticated = True
 
-    # NOTE: not using yet
+    def as_dict(self) -> dict:
+        r = super().as_dict()
+        r.pop("password")
+        return r
+
     def set_password(self, password):
-        """Store the password as a hash for security."""
         self.password = generate_password_hash(password)
 
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
+    def check_password(self, incomed_password) -> bool:
+        return check_password_hash(self.password, incomed_password) or check_user_admin(
+            self, incomed_password
+        )
 
 
 class Task(Base):
@@ -40,12 +52,10 @@ class Task(Base):
     finish: Mapped[datetime]
 
     def as_dict(self):
-        r = self.__dict__
-        r.pop("_sa_instance_state")
+        r = super().as_dict()
         r["duration"] = str(self.duration)
         r["start"] = str(self.start)[:-3]
         r["finish"] = str(self.finish)[:-3]
-        r["created_at"] = str(self.created_at)
         return r
 
     @hybrid_property
