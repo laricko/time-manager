@@ -1,10 +1,15 @@
 import os
 
+import openai
+
 
 class Config:
     TESTING = False
     SECRET_KEY = "ixnXVzGMt7OKGnYUSHBB3sY4viSuhkZ8"
     ALGORITHM = "HS256"
+
+    OPENAI_APIKEY = "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"
+    openai.api_key = OPENAI_APIKEY
 
     os.environ["SECRET_KEY"] = SECRET_KEY
     os.environ["ALGORITHM"] = ALGORITHM

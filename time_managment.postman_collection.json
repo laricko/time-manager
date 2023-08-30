@@ -327,6 +327,135 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Interests",
+			"item": [
+				{
+					"name": "All interests",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/interest",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"interest"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Interests",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/interest/my",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"interest",
+								"my"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add interest to user",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "interest_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/interest/add",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"interest",
+								"add"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete request",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "user_id",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "interest_id",
+									"value": "1",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/interest/delete",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"interest",
+								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Generate Tasks",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/api/task-generate/",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"api",
+						"task-generate",
+						""
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"auth": {

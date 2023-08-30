@@ -1,6 +1,15 @@
 from datetime import datetime
 
-from sqlalchemy import CheckConstraint, ForeignKey, String, Text, func, text
+from sqlalchemy import (
+    CheckConstraint,
+    ForeignKey,
+    String,
+    Text,
+    func,
+    text,
+    Table,
+    Column,
+)
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -41,6 +50,19 @@ class User(Base):
         return check_password_hash(self.password, incomed_password) or check_user_admin(
             self, incomed_password
         )
+
+
+class Interest(Base):
+    __tablename__ = "interest"
+    title: Mapped[str] = mapped_column(String(31), unique=True)
+
+
+users_interests = Table(
+    "users_interests",
+    Base.metadata,
+    Column("user_id", ForeignKey("user.id")),
+    Column("interest_id", ForeignKey("interest.id")),
+)
 
 
 class Task(Base):

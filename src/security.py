@@ -5,16 +5,6 @@ from flask import current_app
 from jose.exceptions import JWTError
 from jose import jwt
 
-# password_context = CryptContext("bcrypt", deprecated="auto")
-
-
-# def hash_password(password: str) -> str:
-#     return password_context.hash(password)
-
-
-# def verify_passwrod(password: str, hash: str) -> bool:
-#     return password_context.verify(password, hash)
-
 
 def create_access_token_for_user(username: str) -> str:
     to_encode = {"sub": username}

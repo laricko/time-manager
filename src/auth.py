@@ -36,6 +36,8 @@ def get_user(request: Request):
         return anonymous_user
     _, token = creds.to_header().split(" ")
     decoded = decode_access_token(token)
+    if not decoded:
+        return anonymous_user
     return _get_user(decoded["sub"])
 
 

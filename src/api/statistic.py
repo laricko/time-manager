@@ -7,7 +7,7 @@ from crud import task as crud
 from auth import only_authenticated
 from models import Task
 
-statistic_router = Blueprint("statistic", __name__, url_prefix="statistic")
+statistic_router = Blueprint("statistic", __name__, url_prefix="/statistic")
 
 
 SLEEP_TIME = 28800  # Must be in user settings
@@ -47,5 +47,5 @@ def statistic():
     start = datetime.fromisoformat(start)
     finish = datetime.fromisoformat(finish)
     user = request.environ["user"]
-    tasks = crud.get_tasks(user, start=start, finish=finish)
+    tasks = crud.get_tasks_for_user(user, start=start, finish=finish)
     return collect_statistic(tasks, start, finish)

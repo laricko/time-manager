@@ -11,7 +11,7 @@ task_router = Blueprint("task", __name__, url_prefix="/task")
 def tasks():
     user = request.environ["user"]
     type = request.args.get("type")
-    tasks = crud.get_tasks(user, type=type)
+    tasks = crud.get_tasks_for_user(user.id, type=type)
     return [task.as_dict() for task in tasks]
 
 
@@ -20,7 +20,7 @@ def tasks():
 def create_task():
     user = request.environ["user"]
     data = request.form
-    crud.create_task(user, data)
+    crud.create_task(user.id, data)
     return data
 
 
